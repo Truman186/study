@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.deyun.dao.CaloriesMapper">
+    <select id="queryPlan" resultType="com.deyun.bean.Plan">
+        select b.id,a.username,b.remark,b.meals,
+        (select sum(pd.quantity*cl.calories) from planDetail pd,calories cl
+         where pd.mainId=b.id
+        and cl.id=pd.calories) as sumCalories,mm.plan
+        from sys_user a,foodplanmain b,
+        (select GROUP_CONCAT(d.name,c.quantity,d.unit) as plan,fb.id
+		from planDetail c,calories d,foodplanmain fb
+         where c.mainId=fb.id
+        and c.calories=d.id
+        GROUP BY fb.id) mm
+        where a.username=b.userName
+        and a.username=#{name}
+        and mm.id=b.id
+    </select>
+</mapper>

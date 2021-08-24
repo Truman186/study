@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.deyun.dao.CourseDao">
+    <select id="getList" resultType="com.deyun.bean.Course">
+        select cid,cname,num,remake,weekday,time,address,lesson from course
+        where uid=#{uid}
+        and cname like #{cname}
+        and status='1'
+    </select>
+    <insert id="addCourse">
+        INSERT into course(cname,num,uid,remake,weekday,time,address,lesson,status)
+        values(#{cname},#{num},#{uid},#{remake},#{weekday},#{time},#{address},#{lesson},#{status})
+    </insert>
+    <select id="check" resultType="Integer">
+        select COUNT(*) from course
+        where weekday=#{weekday}
+        and time =#{time}
+        and status='1'
+    </select>
+    <select id="editCheck" resultType="Integer">
+        SELECT COUNT(*) from course
+        where weekday=#{weekday}
+        and time =#{time}
+        and address=#{address}
+        and status='1'
+    </select>
+    <select id="checkCourse"  resultType="Integer">
+        select count(*) from course c
+        LEFT join sys_user su on c.uid =su.id
+        where c.time=#{time}
+        and c.weekday=#{weekday}
+        and su.username =#{username}
+    </select>
+    <select id="vertifyCourse" resultType="com.deyun.bean.Course">
+   select c.cid,c.cname,c.num,c.remake,c.weekday,c.time,c.address,c.lesson,s.username
+    from course c left join sys_user s on c.uid=s.id
+    where cname like #{cname}
+    and status='0'
+     and s.username like #{username}
+    </select>
+    <select id="view" resultType="com.deyun.bean.Course">
+        select c.cid,c.cname,c.num,c.remake,c.weekday,c.time,c.address,c.lesson,s.username
+        from course c left join sys_user s on c.uid=s.id
+        where cname like #{cname}
+        and status='1' and s.id in(
+        select id FROM sys_user
+        where username like #{username}
+        )
+        and c.num>0
+        ORDER BY weekday,time
+    </select>
+    <update id="editCourse">
+        UPDATE course
+        SET cname =#{cname},
+        num=#{num},remake=#{remake},weekday=#{weekday},time=#{time},address=#{address},lesson=#{lesson},status="1"
+        where cid=#{cid}
+    </update>
+    <delete id="deleteCourse">
+        DELETE  FROM course
+        WHERE cid=#{cid}
+    </delete>
+    <insert id="chooseCourse">
+        INSERT INTO source (cid,username)
+       values(#{cid},#{stuName})
+    </insert>
+    <select id="beforeChoose" resultType="Integer">
+        SELECT count(*) from source s
+        left join course c on s.cid=c.cid
+        where c.weekday=#{weekday}
+        and c.time=#{time}
+        and c.status='1'
+        and c.num>0
+        and s.username=#{stuName}
+    </select>
+    <update id="editCourseNum">
+        update course set num=num-1
+       where cid =#{cid}
+    </update>
+    <select id="myCourse" resultType="com.deyun.bean.Course" >
+      select c.cid,c.cname,su.username,c.num,c.remake,c.weekday,c.time,c.address,c.lesson from course c
+      left join source s on c.cid = s.cid
+      left join sys_user su on c.uid=su.id
+      where s.username = #{stuName}
+      and c.cname like #{cname}
+      and c.uid in (SELECT id from sys_user
+      WHERE username like #{username})
+    </select>
+    <delete id="dropCourse">
+        DELETE from source
+        where cid=#{cid}
+        and username=#{stuName}
+    </delete>
+    <update id="addCourseNum">
+        update course set num=num+1
+        where cid =#{cid}
+    </update>
+    <select id="sourceList" resultType="com.deyun.bean.User">
+        select su.username,su.email from sys_user su
+        left join source s on s.username=su.username
+        where s.cid=#{cid}
+    </select>
+
+    <select id="mysourceList" resultType="String">
+        select c.cname from course c
+        LEFT JOIN source s on s.cid =c.cid
+        LEFT JOIN sys_user su on s.username=su.username
+        where  su.username=#{username}
+        and c.weekday =#{weekday}
+        and c.time=#{time}
+    </select>
+    <select id="mycourceList" resultType="String">
+        select c.cname from course c
+        LEFT JOIN sys_user su on su.id=c.uid
+        where  su.username=#{username}
+        and c.weekday =#{weekday}
+        and c.time=#{time}
+        and c.status="1"
+    </select>
+    <select id="checkCouseNum" resultType="Integer">
+        select num from course
+        where cid =#{cid}
+    </select>
+</mapper>

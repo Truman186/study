@@ -1,0 +1,44 @@
+{
+  "id": "1931854",
+  "name": "fl",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "6057698",
+      "name": "导出",
+      "font_class": "export",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    },
+    {
+      "icon_id": "9512683",
+      "name": "验证码",
+      "font_class": "verify",
+      "unicode": "e63f",
+      "unicode_decimal": 58943
+    },
+    {
+      "icon_id": "1010106",
+      "name": "列表",
+      "font_class": "liebiao",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "10392614",
+      "name": "登录",
+      "font_class": "denglu",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "14151838",
+      "name": "密码",
+      "font_class": "mima",
+      "unicode": "e632",
+      "unicode_decimal": 58930
+    }
+  ]
+}

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.deyun.dao.UserDao">
+    <select id="getUserByMassege" resultType="com.deyun.bean.User">
+        select * from sys_user
+        where
+        username = #{username}
+        and password =#{password}
+        and state =1
+    </select>
+    <select id="getAllUser" resultType="com.deyun.bean.User">
+        select s.username ,s.password ,s.email,s.state,r.rolename as role from sys_user s
+        left join role r on s.roleId = r.roleId
+        <if test="username !=null">
+            WHERE username like #{username}
+        </if>
+       -- GROUP BY username
+        LIMIT #{pageStart},#{pageSize}
+    </select>
+    <select id="getUserCounts" resultType="java.lang.Integer">
+        SELECT  COUNT(*) from sys_user
+        <if test="username !=null">
+            WHERE username like #{username}
+        </if>
+    </select>
+    <update id="updateState">
+      update sys_user set state =(
+        case
+        when state =true then false
+        else true end)
+         where username =#{username}
+    </update>
+    <insert id="addUser">
+        INSERT INTO sys_user
+        (username,password,email,roleId,state)
+        VALUE
+        (#{username},#{password},#{email},#{roleId},#{state})
+    </insert>
+    <delete id="deleteUser">
+        DELETE FROM sys_user
+       WHERE username=#{username}
+    </delete>
+    <select id="selectByID"  resultType="com.deyun.bean.User">
+       select s.username ,s.password ,s.email,s.state,r.rolename as role from sys_user s
+        left join role r on s.roleId = r.roleId
+         WHERE s.id=#{id}
+    </select>
+    <select id="selectByName"  resultType="com.deyun.bean.User">
+        select * from sys_user
+        WHERE username=#{username}
+    </select>
+    <update id="editUser">
+        UPDATE sys_user
+        SET
+        password = #{password},
+        email = #{email}
+        where id= #{id}
+    </update>
+    <select id="getList" resultType="com.deyun.bean.User">
+        select s.username ,s.password ,s.email,s.state,r.rolename as role from sys_user s
+        left join role r on s.roleId = r.roleId
+    </select>
+    <update id="editRole">
+        UPDATE sys_user
+        set roleId =#{roleId}
+        where username =#{username}
+    </update>
+    <select id="check"  resultType="com.deyun.bean.User">
+        select * from sys_user
+        where
+        username = #{username}
+    </select>
+    <insert id="regist">
+         INSERT INTO sys_user
+        (username,password,roleId,state)
+        VALUE
+        (#{username},#{password},#{roleId},#{state})
+    </insert>
+    <select id="getIdByName" resultType="Integer">
+        select id from SYS_USER
+        where username like #{username}
+    </select>
+    <select id="countLoginRecord" resultType="Integer">
+        SELECT COUNT(*) from loginRecord
+        WHERE time =#{time}
+    </select>
+    <select id="countPerNum" resultType="Integer">
+        SELECT COUNT(DISTINCT(username)) as num from loginRecord where time=#{time}
+    </select>
+    <insert id="addLoginRecord">
+        INSERT into loginRecord(id,username,ip,time)
+        VALUES (#{id},#{username},#{ip},#{time})
+    </insert>
+    <select id="queryUserInfo" resultType="com.deyun.bean.UserInfo">
+        SELECT * from user_info
+        WHERE username =#{username}
+    </select>
+    <update id="updateUserInfo" >
+        UPDATE user_info
+        SET sex=#{sex},birth=#{birth},address=#{address},phone=#{phone},idcard=#{idcard},trueName=#{trueName}
+        WHERE username =#{username}
+    </update>
+    <select id="queryNum" resultType="Integer">
+      SELECT COUNT(*)  from user_info
+        WHERE username=#{username}
+    </select>
+    <insert id="addUserInfo">
+        INSERT INTO user_info(sex,birth,address,phone,idcard,trueName,username)
+        VALUES (#{sex},#{birth},#{address},#{phone},#{idcard},#{trueName},#{username})
+    </insert>
+    <update id="editPsw">
+        UPDATE sys_user set password =#{newPsw}
+        WHERE username=#{username}
+    </update>
+</mapper>
